@@ -2,6 +2,8 @@ package pl.coderslab;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.BookDao;
@@ -60,4 +62,12 @@ public class BookController {
 
         return book.getTitle();
     }
+
+    @RequestMapping("/list")
+    public String list(Model model){
+        model.addAttribute("books", bookDao.findAll());
+
+        return "books-list";
+    }
+
 }
