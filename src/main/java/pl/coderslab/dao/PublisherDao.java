@@ -1,7 +1,6 @@
 package pl.coderslab.dao;
 
 import org.springframework.stereotype.Component;
-import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
 import javax.persistence.EntityManager;
@@ -16,16 +15,26 @@ public class PublisherDao {
     @PersistenceContext
     EntityManager entityManager;
 
-    public Publisher addPublisher(Publisher publisher) {
+    public Publisher add(Publisher publisher) {
         entityManager.persist(publisher);
         return publisher;
     }
 
-    public Publisher getById(long id){
+    public Publisher update(Publisher publisher) {
+        entityManager.merge(publisher);
+        return publisher;
+    }
+
+    public void remove(long id) {
+        entityManager.remove(findById(id));
+    }
+
+
+    public Publisher findById(long id){
         return entityManager.find(Publisher.class, id);
     }
 
-    public List<Publisher> getAll() {
+    public List<Publisher> findAll() {
         return entityManager.createQuery("select p from Publisher p").getResultList();
     }
 }

@@ -1,9 +1,6 @@
 package pl.coderslab.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Person {
@@ -14,6 +11,8 @@ public class Person {
     private String login;
     private String password;
     private String email;
+    @OneToOne
+    private PersonDetails personDetails;
 
     public long getId() {
         return id;
@@ -45,5 +44,13 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public PersonDetails getPersonDetails() {
+        return personDetails;
+    }
+
+    public void setPersonDetails(PersonDetails personDetails) {
+        this.personDetails = personDetails;
     }
 }

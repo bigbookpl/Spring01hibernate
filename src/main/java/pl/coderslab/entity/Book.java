@@ -13,7 +13,6 @@ public class Book {
     private String title;
     private Integer rating;
     private String description;
-    private String author;
     @ManyToOne
     private Publisher publisher;
 
