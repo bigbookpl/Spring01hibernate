@@ -3,8 +3,7 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
@@ -28,43 +27,35 @@ public class BookController {
     @Autowired
     AuthorDao authorDao;
 
-    @RequestMapping("/add")
-    @ResponseBody
-    public String addBook(){
-        Book book = new Book();
-        Publisher publisher = publisherDao.findById(1L);
-        book.setPublisher(publisher);
-        book.setTitle("Some title");
-        book.setDescription("Some description");
-        book.setRating(1);
+    @GetMapping("/add")
+    public String addBook(Model model){
+        model.addAttribute("book", new Book());
+        return "add-book-form";
+    }
 
-        Author author1 = authorDao.findById(1L);
-        Author author2 = authorDao.findById(2L);
-
-        List<Author> authors = Arrays.asList(author1, author2);
-        book.setAuthors(authors);
-
+    @PostMapping("/add")
+    public String saveBook(@ModelAttribute("book") Book book){
         bookDao.add(book);
-
-        return "Book Added";
+        return "redirect:/book/list";
     }
 
-    @RequestMapping("/edit")
-    @ResponseBody
-    public String editBook(){
-        Book book = bookDao.findById(1);
-        book.setRating(4);
+    @GetMapping("/edit/{id}")
+    public String editBook(@PathVariable("id") Long id, Model model){
+        Book book = bookDao.findById(id);
+        model.addAttribute("book", book);
+        return "add-book-form";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateBook(@ModelAttribute("book") Book book){
         bookDao.update(book);
-
-        return "Book updated";
+        return "redirect:/book/list";
     }
 
-    @RequestMapping("/remove")
-    @ResponseBody
-    public String removeBook(){
-        bookDao.remove(1L);
-
-        return "Book removed";
+    @RequestMapping("/remove/{id}")
+    public String removeBook(@PathVariable("id") Long id){
+        bookDao.remove(id);
+        return "redirect:/book/list";
     }
 
     @RequestMapping("/find")
@@ -82,4 +73,9 @@ public class BookController {
         return "books-list";
     }
 
+
+    @ModelAttribute("publishers")
+    public List<Publisher> publisher(){
+        return publisherDao.findAll();
+    }
 }

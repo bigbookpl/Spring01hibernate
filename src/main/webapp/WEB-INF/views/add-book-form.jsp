@@ -14,7 +14,7 @@
 </head>
 <body>
     <%--@elvariable id="book" type="pl.coderslab.entity.Book"--%>
-    <form:form modelAttribute="book" >
+    <form:form modelAttribute="book" method="post">
         Title: <form:input path="title"/>
         Rating: <form:input path="rating" />
         Description <form:textarea path="description"/>
