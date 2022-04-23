@@ -3,6 +3,7 @@ package pl.coderslab.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
 import pl.coderslab.dao.BookDao;
@@ -11,6 +12,7 @@ import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,10 +36,16 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public String saveBook(@ModelAttribute("book") Book book){
+    public String saveBookForm(@Valid Book book, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "add-book-form";
+        }
+
         bookDao.add(book);
         return "redirect:/book/list";
     }
+
 
     @GetMapping("/edit/{id}")
     public String editBook(@PathVariable("id") Long id, Model model){
