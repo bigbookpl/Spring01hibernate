@@ -2,6 +2,7 @@ package pl.coderslab.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.BookDao;
@@ -24,8 +25,8 @@ public class ValidationController {
     private BookDao bookDao;
 
     @RequestMapping("/book")
-    @ResponseBody
-    public String validateBook(){
+
+    public String validateBook(Model model){
         Book book = new Book();
         book.setPages(1);
         book.setAuthors(Collections.emptyList());
@@ -35,9 +36,7 @@ public class ValidationController {
         if (violations.isEmpty()){
             bookDao.add(book);
         }else {
-            for (ConstraintViolation<Book> violation : violations) {
-                System.out.println(violation.getPropertyPath()+" ----> "+violation.getMessage());
-            }
+            model.addAttribute("violations", violations);
         }
         return "validation";
     }

@@ -19,6 +19,7 @@ import pl.coderslab.converter.PublisherConverter;
 
 import javax.persistence.EntityManagerFactory;
 import javax.validation.Validator;
+
 import java.nio.charset.Charset;
 import java.util.Locale;
 
