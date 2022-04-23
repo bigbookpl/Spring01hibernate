@@ -6,28 +6,30 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.dao.AuthorDao;
-import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
-import pl.coderslab.entity.Author;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.repository.BookRepository;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/book")
 public class BookController {
 
-    @Autowired
-    BookDao bookDao;
+//    @Autowired
+//    BookDao bookDao;
 
     @Autowired
     PublisherDao publisherDao;
 
     @Autowired
     AuthorDao authorDao;
+
+    @Autowired
+    BookRepository bookRepository;
 
     @GetMapping("/add")
     public String addBook(Model model){
@@ -42,41 +44,43 @@ public class BookController {
             return "add-book-form";
         }
 
-        bookDao.add(book);
+        bookRepository.save(book);
         return "redirect:/book/list";
     }
 
 
     @GetMapping("/edit/{id}")
     public String editBook(@PathVariable("id") Long id, Model model){
-        Book book = bookDao.findById(id);
+        Optional<Book> book = bookRepository.findById(id);
         model.addAttribute("book", book);
         return "add-book-form";
     }
 
     @PostMapping("/edit/{id}")
     public String updateBook(@ModelAttribute("book") Book book){
-        bookDao.update(book);
+        bookRepository.save(book);
+
+
         return "redirect:/book/list";
     }
 
     @RequestMapping("/remove/{id}")
     public String removeBook(@PathVariable("id") Long id){
-        bookDao.remove(id);
+        bookRepository.deleteById(id);
         return "redirect:/book/list";
     }
 
     @RequestMapping("/find")
     @ResponseBody
     public String findBook(){
-        Book book = bookDao.findById(1);
+        Optional<Book> book = bookRepository.findById(1L);
 
-        return book.getTitle();
+        return book.get().getTitle();
     }
 
     @RequestMapping("/list")
     public String list(Model model){
-        model.addAttribute("books", bookDao.findAll());
+        model.addAttribute("books", bookRepository.findAll());
 
         return "books-list";
     }

@@ -12,6 +12,7 @@ import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.repository.BookRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -19,8 +20,9 @@ import java.util.List;
 @Controller
 public class BookFormController {
 
+
     @Autowired
-    BookDao bookDao;
+    BookRepository bookRepository;
 
     @Autowired
     PublisherDao publisherDao;
@@ -39,7 +41,8 @@ public class BookFormController {
             return "add-book-form";
         }
 
-        bookDao.add(book);
+//        bookDao.add(book);
+        bookRepository.save(book);
         return "redirect:/book/list";
     }
 
